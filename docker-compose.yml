@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  backend:
+    container_name: auth-api
+    image: node:latest
+    build: .
+    env_file: 
+      - .env
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./:/app/
+    working_dir: /app
+    command: sh -c "npm run dev"
+
+  postgres:
+    container_name: database-auth
+    image: postgres
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_DATABASE}
+      - DB_ROOT_PASSWORD= ${DB_ROOT_PASSWORD}
+    ports:
+      - 6500:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+
+volumes:
+  postgres_data:
